@@ -92,15 +92,75 @@ myRev xs
       | null (tail xs) = xs
       | otherwise = last xs:myRev (init xs)
         
-myTake k xs = undefined -- verifique se sua solucao produz o mesmo resultado que "take 5 [1..]"
-myDrop k xs = undefined
-myMaximum xs = undefined
-myMinimum xs = undefined
-mySum xs = undefined
-myProduct xs = undefined
-myElem xs = undefined
-myRange k m = undefined -- sua versao da funcao [k..m]. existem as funcoes succ e pred (sucessor e predecessor que podem ser uteis)
-myRangeStep k p m = undefined -- sua versao da funcao [k,p..m]
+-- verifique se sua solucao produz o mesmo resultado que "take 5 [1..]"
+myTake :: Integer -> [a] -> [a]
+myTake 0 _ = []
+myTake _ [] = []
+myTake k (x:xs) = (x:myTake (k-1) xs)
+
+myDrop :: Integer -> [a] -> [a]
+myDrop 0 xs = xs
+myDrop _ [] = []
+myDrop k (x:xs) = myDrop (k-1) xs
+
+myMaximum :: Ord a => [a] -> a
+myMaximum (x:xs)
+          | null xs = x
+          | x > head xs = myMaximum (x:tail xs)
+          | otherwise = myMaximum xs
+
+myMinimum :: Ord a => [a] -> a
+myMinimum (x:xs)
+          | null xs = x
+          | x < head xs = myMinimum (x:tail xs)
+          | otherwise = myMinimum xs
+
+mySum :: [Integer] -> Integer
+mySum [] = 0
+mySum [x] = x
+mySum (x:xs) = x + mySum xs
+
+myProduct :: [Integer] -> Integer
+myProduct [] = 1
+myProduct [x] = x
+myProduct (x:xs) = x * myProduct xs
+
+myElem :: Integer -> [Integer] -> Bool
+myElem _ [] = False
+myElem a (x:xs)
+      | a == x = True
+      | otherwise = myElem a xs
+
+myRange :: Integer -> Integer -> [Integer]
+myRange k m
+        | k == m = [k]
+        | otherwise = k:myRange (k+1) m
+
+myRangeStep k p m
+            |  k > m || k > p = []
+            | otherwise = [k] ++ myRangeStep p (p+p-k) m
+
 myCycle xs = undefined
 myRepeat n = undefined
-myReplicate k n = undefined
+
+myReplicate :: Integer -> Integer -> [Integer]
+myReplicate 0 _ = []
+myReplicate 1 n = [n]
+myReplicate k n = n:myReplicate (k-1) n
+
+{-
+- Calcula um termo da sequencia de Fibonnacci usando com apenas uma chamada recursiva.
+-}
+fibx n = fibx' 0 1 n
+fibx' a b count
+    | count == 0 = a
+    | otherwise = fibx' b (a+b) (count-1)
+
+{-
+- Calcula um termo da sequencia de Fibonnacci usando com apenas uma chamada recursiva.
+-}
+newfib :: Integer -> Integer
+newfib n = newfib' 0 1 n
+newfib' :: Integer ->  Integer -> Integer -> Integer
+newfib' a _ 0 = a
+newfib' a b n = newfib' b (a+b) (n-1)
